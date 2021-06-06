@@ -21,31 +21,32 @@ struct ContentView: View {
             DatePicker("First Time", selection: $firstTime, displayedComponents: .hourAndMinute)
                 .labelsHidden()
                 .clipped()
-                .padding(.bottom, 50)
+                .padding(.bottom, 25)
             
             Text("Second Time")
             DatePicker("Second Time", selection: $secondTime, displayedComponents: .hourAndMinute)
                 .labelsHidden()
                 .clipped()
-                .padding(.bottom, 50)
+                .padding(.bottom, 25)
             
             if showResult {
                 Text("Midpoint")
                 DatePicker("Midpoint", selection: $result, displayedComponents: .hourAndMinute)
                     .labelsHidden()
                     .clipped()
-                    .padding(.bottom, 50)
+                    .padding(.bottom, 25)
                 
                 Text("Time to midpoint:")
                 Text(timeDifference)
-                    .padding(.bottom, 50)
+                    .padding(.bottom, 25)
             }
             
             Button("Result") {
                 calculateMidpoint()
                 showResult = true
             }
-                .padding(.bottom, 50)
+                .padding(.bottom, 25)
+                .padding(.top, 25)
             
             Button("Reset") {
                 firstTime = Date()
@@ -53,6 +54,7 @@ struct ContentView: View {
                 showResult = false
             }
                 .foregroundColor(.red)
+                .padding(.bottom, 25)
         }
     }
     
