@@ -18,34 +18,35 @@ struct ContentView: View {
     var body: some View {
         VStack {
             Text("First Time")
-            DatePicker("First Time", selection: $firstTime, displayedComponents: .hourAndMinute)
+            DatePicker("First Time", selection: $firstTime)
                 .labelsHidden()
                 .clipped()
-                .padding(.bottom, 50)
+                .padding(.bottom, 25)
             
             Text("Second Time")
-            DatePicker("Second Time", selection: $secondTime, displayedComponents: .hourAndMinute)
+            DatePicker("Second Time", selection: $secondTime)
                 .labelsHidden()
                 .clipped()
-                .padding(.bottom, 50)
+                .padding(.bottom, 25)
             
             if showResult {
                 Text("Midpoint")
                 DatePicker("Midpoint", selection: $result, displayedComponents: .hourAndMinute)
                     .labelsHidden()
                     .clipped()
-                    .padding(.bottom, 50)
+                    .padding(.bottom, 25)
                 
                 Text("Time to midpoint:")
                 Text(timeDifference)
-                    .padding(.bottom, 50)
+                    .padding(.bottom, 25)
             }
             
             Button("Result") {
                 calculateMidpoint()
                 showResult = true
             }
-                .padding(.bottom, 50)
+                .padding(.bottom, 25)
+                .padding(.top, 25)
             
             Button("Reset") {
                 firstTime = Date()
@@ -53,19 +54,20 @@ struct ContentView: View {
                 showResult = false
             }
                 .foregroundColor(.red)
+                .padding(.bottom, 25)
         }
     }
     
     func calculateMidpoint() {
-        let timeDifferenceFormatted = Calendar.current.dateComponents([.hour, .minute, .second], from: firstTime, to: secondTime)
         let timeDifferenceSeconds = Calendar.current.dateComponents([.second], from: firstTime, to: secondTime).second ?? 0
         let midpointSeconds = timeDifferenceSeconds / 2
         
+        let totalMinutes = midpointSeconds / 60
+        let totalHours = totalMinutes / 60
         
-        let hours = String(timeDifferenceFormatted.hour ?? 0)
-        let minutes = String(timeDifferenceFormatted.minute ?? 0)
-        let seconds = String(timeDifferenceFormatted.second ?? 0)
-        timeDifference = hours + "h " + minutes + "m " + seconds + "s"
+        let hours = String(totalHours)
+        let minutes = String(totalMinutes % 60)
+        timeDifference = (hours + "h ") + (minutes + "m ")
 
         result = firstTime.addingTimeInterval(TimeInterval(midpointSeconds))
     }
