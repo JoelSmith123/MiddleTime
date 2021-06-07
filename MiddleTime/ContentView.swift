@@ -6,80 +6,65 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct ContentView: View {
-    @State var firstTime = Date()
-    @State var secondTime = Date()
-    @State var timeDifference = ""
-    
-    @State var showResult = false
-    @State var result = Date()
+    @State var showSavesMenu = false
     
     var body: some View {
-        VStack {
-            Text("First Time")
-            DatePicker("First Time", selection: $firstTime)
-                .labelsHidden()
-                .clipped()
-                .padding(.bottom, 25)
-            
-            Text("Second Time")
-            DatePicker("Second Time", selection: $secondTime)
-                .labelsHidden()
-                .clipped()
-                .padding(.bottom, 25)
-            
-            if showResult {
-                Text("Midpoint")
-                DatePicker("Midpoint", selection: $result, displayedComponents: .hourAndMinute)
-                    .labelsHidden()
-                    .clipped()
-                    .padding(.bottom, 25)
-                
-                Text("Time to midpoint:")
-                Text(timeDifference)
-                    .padding(.bottom, 25)
-            }
-            
-            Button("Result") {
-                calculateMidpoint()
-                showResult = true
-            }
-                .padding(.bottom, 25)
-                .padding(.top, 25)
-            
-            Button("Reset") {
-                firstTime = Date()
-                secondTime = Date()
-                showResult = false
-            }
-                .foregroundColor(.red)
-                .padding(.bottom, 25)
+        NavigationView {
+            MainView()
+            .navigationTitle("Midpoint Finder")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(leading: (
+                Button(action: {
+                    withAnimation {
+                        showSavesMenu.toggle()
+                    }
+                }) {
+                    Image(systemName: "line.horizontal.3")
+                        .imageScale(.large)
+                }
+            ))
+        }.sheet(isPresented: $showSavesMenu) {
+            SavesMenu(showSavesMenu: $showSavesMenu)
         }
     }
     
-    func calculateMidpoint() {
-        let timeDifferenceSeconds = Calendar.current.dateComponents([.second], from: firstTime, to: secondTime).second ?? 0
-        let midpointSeconds = timeDifferenceSeconds / 2
+    lazy var persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "MiddleTime")
+        container.loadPersistentStores { _, error in
+            if let error = error as NSError? {
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
+        }
         
-        let totalMinutes = midpointSeconds / 60
-        let totalHours = totalMinutes / 60
-        
-        let hours = String(totalHours)
-        let minutes = String(totalMinutes % 60)
-        timeDifference = (hours + "h ") + (minutes + "m ")
-
-        result = firstTime.addingTimeInterval(TimeInterval(midpointSeconds))
+        return container
+    }()
+    
+    mutating func saveContext() {
+      let context = persistentContainer.viewContext
+      if context.hasChanges {
+        do {
+          try context.save()
+        } catch {
+          let nserror = error as NSError
+          fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+        }
+      }
     }
 }
+
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             ContentView()
-                .preferredColorScheme(.dark)
+//                .preferredColorScheme(.dark)
 //                .previewDevice(PreviewDevice(rawValue: "iPhone 12"))
 //                .previewDisplayName("iPhone 12")
+            
         }
     }
 }
