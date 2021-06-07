@@ -18,13 +18,13 @@ struct ContentView: View {
     var body: some View {
         VStack {
             Text("First Time")
-            DatePicker("First Time", selection: $firstTime, displayedComponents: .hourAndMinute)
+            DatePicker("First Time", selection: $firstTime)
                 .labelsHidden()
                 .clipped()
                 .padding(.bottom, 25)
             
             Text("Second Time")
-            DatePicker("Second Time", selection: $secondTime, displayedComponents: .hourAndMinute)
+            DatePicker("Second Time", selection: $secondTime)
                 .labelsHidden()
                 .clipped()
                 .padding(.bottom, 25)
