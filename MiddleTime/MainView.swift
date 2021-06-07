@@ -80,13 +80,11 @@ struct MainView: View {
     }
     
     func saveMidpoint() {
-        let midpointToSave = [
-            "firstTime" : firstTime,
-            "secondTime" : secondTime,
-            "timeDifference" : timeDifference,
-            "midpoint" : result
-        ] as [String : Any]
-        
-        UserDefaults.standard.set(midpointToSave, forKey: "savedMidpoint")
+//        let midpointToSave = [
+//            "firstTime" : firstTime,
+//            "secondTime" : secondTime,
+//            "timeDifference" : timeDifference,
+//            "midpoint" : result
+//        ] as [String : Any]
     }
 }
